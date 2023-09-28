@@ -1,0 +1,67 @@
+[project]
+name = "asgi_etags"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Marcin Paliwoda", email = "paliwoda.marcin@zoho.com" }]
+dependencies = ["mypy-extensions>=1.0.0"]
+requires-python = ">=3.11"
+readme = "README.md"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["pdm-backend", "mypy>=1.2.0"]
+build-backend = "pdm.backend"
+
+[tool.pdm.build]
+run-setuptools = true
+
+[tool.pdm.scripts]
+lint = "ruff check src"
+typecheck = "mypy src"
+test = "pytest"
+"black:run" = "black src tests"
+"black:check" = "black src tests --check"
+"ruff:run" = "ruff --fix src tests"
+
+[tool.pdm.scripts.format]
+composite = ["black:run", "ruff:run"]
+
+[tool.pdm.scripts."format:check"]
+composite = ["black:check"]
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "mypy>=1.5.1",
+    "ruff>=0.0.291",
+    "black>=23.9.1",
+    "pytest>=7.4.2",
+    "fastapi>=0.103.1",
+    "litestar>=2.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.mypy]
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_unused_ignores = true
+python_version = "3.11"
+
+[tool.ruff]
+select = ["F", "B"]
+line-length = 120
+unfixable = ["B"]
