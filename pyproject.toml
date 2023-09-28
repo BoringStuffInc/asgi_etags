@@ -1,6 +1,6 @@
 [project]
 name = "asgi_etags"
-version = "0.1.1"
+version = "0.2.0"
 description = ""
 authors = [{ name = "Marcin Paliwoda", email = "paliwoda.marcin@zoho.com" }]
 dependencies = ["mypy-extensions>=1.0.0"]
