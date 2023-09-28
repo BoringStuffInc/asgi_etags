@@ -11,6 +11,10 @@ pip install asgi_etags
 
 Or in the `Releases` tab, both in `sdist` format as well as `wheels`.
 
+## Supported Python versions
+
+Currently the library supports Python 3.11 only.
+
 ## Example usage:
 
 ### With FastAPI
@@ -31,6 +35,8 @@ def hello_world():
 
 ```python
 from litestar import Litestar
+from hashlib import md5
+from asgi_etags import ETagMiddlewareFactory
 
 @get(path="/", media_type="application/json", sync_to_thread=False)
 def hello_world() -> dict[str, str]:
