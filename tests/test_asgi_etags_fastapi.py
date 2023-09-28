@@ -1,8 +1,8 @@
 import pytest
-from asgi_etags import ETagMiddlewareFactory
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from hashlib import md5
+from asgi_etags import ETagMiddleware
 
 
 def md5_hash(body: bytes) -> str:
@@ -12,7 +12,7 @@ def md5_hash(body: bytes) -> str:
 @pytest.fixture
 def app():
     app = FastAPI()
-    app.add_middleware(ETagMiddlewareFactory(md5_hash))
+    app.add_middleware(ETagMiddleware, etag_generator=md5_hash)
 
     @app.get("/")
     def root():

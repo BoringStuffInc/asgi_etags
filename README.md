@@ -21,10 +21,10 @@ Currently the library supports Python 3.11 only.
 ```python
 from fastapi import FastAPI
 from hashlib import md5
-from asgi_etags import ETagMiddlewareFactory
+from asgi_etags import ETagMiddleware
 
 app = FastAPI()
-app.add_middleware(ETagMiddlewareFactory(lambda body: md5(body).hexdigest()))
+app.add_middleware(ETagMiddleware, etag_generator=lambda body: md5(body).hexdigest())
 
 @app.get("/")
 def hello_world():

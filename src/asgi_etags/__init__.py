@@ -20,7 +20,7 @@ IF_MATCH_EXACT = b"if-match"
 IF_NONE_MATCH_EXACT = b"if-none-match"
 
 
-class _ETagMiddleware:
+class ETagMiddleware:
     __slots__: tuple[str, ...] = ("app", "etag_generator")
 
     def __init__(self, app: ASGIApp, etag_generator: ETagGenerator) -> None:
@@ -59,8 +59,8 @@ class ETagMiddlewareFactory:
     def __init__(self, etag_generator: ETagGenerator) -> None:
         self.etag_generator = etag_generator
 
-    def __call__(self, app: ASGIApp) -> _ETagMiddleware:
-        return _ETagMiddleware(app, self.etag_generator)
+    def __call__(self, app: ASGIApp) -> ETagMiddleware:
+        return ETagMiddleware(app, self.etag_generator)
 
 
 class _ETagSendWrapper:
