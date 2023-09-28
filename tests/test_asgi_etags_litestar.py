@@ -15,9 +15,13 @@ def app():
     def root() -> dict[str, str]:
         return {"hello": "world"}
 
+    @get(path="/health", media_type="application/json", sync_to_thread=False)
+    def health() -> dict[str, str]:
+        return {"status": "ok"}
+
     app = Litestar(
-        route_handlers=[root],
-        middleware=[ETagMiddlewareFactory(etag_generator=md5_hash)],
+        route_handlers=[root, health],
+        middleware=[ETagMiddlewareFactory(etag_generator=md5_hash, ignore_paths=[("GET", "/health")])],
     )
 
     return app
@@ -55,3 +59,10 @@ def test_etag_middleware_if_match(app):
 
         response = client.get("/", headers={"If-Match": "invalid"})
         assert response.status_code == 412
+
+
+def test_etag_middleware_ignore_paths(app):
+    with TestClient(app) as client:
+        response = client.get("/health")
+        assert response.status_code == 200
+        assert "ETag" not in response.headers

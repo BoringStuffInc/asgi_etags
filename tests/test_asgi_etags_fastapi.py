@@ -12,11 +12,15 @@ def md5_hash(body: bytes) -> str:
 @pytest.fixture
 def app():
     app = FastAPI()
-    app.add_middleware(ETagMiddleware, etag_generator=md5_hash)
+    app.add_middleware(ETagMiddleware, etag_generator=md5_hash, ignore_paths=[("GET", "/health")])
 
     @app.get("/")
     def root():
         return {"hello": "world"}
+
+    @app.get("/health")
+    def health():
+        return {"status": "ok"}
 
     return app
 
@@ -54,3 +58,11 @@ def test_etag_middleware_if_match(app):
 
     response = client.get("/", headers={"If-Match": "invalid"})
     assert response.status_code == 412
+
+
+def test_etag_middleware_ignore_paths(app):
+    client = TestClient(app)
+
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.headers.get("ETag") is None
